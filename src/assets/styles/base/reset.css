@@ -1,0 +1,31 @@
+*,
+*:after,
+*:before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: var(--font-bitter);
+}
+
+html {
+    min-height: 100vh;
+}
+
+img {
+    max-width: 100%;
+}
+
+li {
+    list-style: none;
+}
+
+button {
+    border: none;
+}
+
+body,
+#root {
+    list-style-type: none;
+    min-height: 100vh;
+}

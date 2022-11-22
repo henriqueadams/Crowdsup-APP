@@ -1,0 +1,18 @@
+:root {
+  /* colors */
+  --smooth-black: #1d1d1d;
+  --strong-blue: #394867;
+  --light-blue: #8593ad;
+  --button-primary: #14274e;
+  --button-primary-shadow: #091122;
+  --button-remove: #8c2424;
+  --button-remove-shadow: #481111;
+  --button-expired: #848484;
+  --white-smoke: #f1f6f9;
+
+  /* fonts */
+  --font-bitter: "Bitter";
+
+  /* metrics */
+  --padding-header: 110px;
+}

@@ -1,0 +1,33 @@
+.div-search-bar {
+    width: 650px;
+    height: 51px;
+    background-color: var(--white-smoke);
+    display: flex;
+    align-items: center;
+}
+
+.input-search-bar {
+    border: none;
+    flex-grow: 1;
+    background-color: var(--white-smoke);
+    height: 100%;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    padding: 15px 22px;
+}
+
+.input-search-bar:focus {
+    outline: none;
+}
+
+.button-search {
+    background-image: url(../../../assets/img/pesquisa-de-lupa\ 1.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 60%;
+    height: 51px;
+    width: 51px;
+    background-color: var(--white-smoke);
+}
