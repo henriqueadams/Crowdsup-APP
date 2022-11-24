@@ -1,8 +1,8 @@
 import axios from "axios"
-//import { useGlobalUser } from "../../../context"
+import { useGlobalUser } from "../../../context"
 
 export function useHttp(baseURL, headers) {
-  //const [, setGlobalUser] = useGlobalUser()
+  const [, setGlobalUser] = useGlobalUser()
 
   const instance = axios.create({
     baseURL,
@@ -15,7 +15,7 @@ export function useHttp(baseURL, headers) {
       return response.data
     } catch (error) {
       if (error.response.status === 401) {
-        // setGlobalUser({})
+        setGlobalUser({})
       }
       throw error
     }
@@ -27,7 +27,7 @@ export function useHttp(baseURL, headers) {
       return response.data
     } catch (error) {
       if (error.response.status === 401) {
-        //setGlobalUser({})
+        setGlobalUser({})
       }
       throw error
     }
@@ -39,7 +39,7 @@ export function useHttp(baseURL, headers) {
       return response.data
     } catch (error) {
       if (error.response.status === 401) {
-        //setGlobalUser({})
+        setGlobalUser({})
       }
       throw error
     }
@@ -51,7 +51,7 @@ export function useHttp(baseURL, headers) {
       return response.data
     } catch (error) {
       if (error.response.status === 401) {
-        //setGlobalUser({})
+        setGlobalUser({})
       }
       throw error
     }

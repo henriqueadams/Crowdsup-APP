@@ -19,10 +19,15 @@
   color: var(--white-smoke);
 }
 
-.div-form-field input {
+.div-form-field input,
+.div-form-field textarea {
   height: 40px;
   font-size: 24px;
   padding: 0 12px;
+}
+
+.div-form-field textarea {
+  height: 150px;
 }
 
 .div-form-field-radio {

@@ -1,0 +1,24 @@
+.div-toast {
+  position: fixed;
+  top: 0;
+  background: gray;
+  padding: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  z-index: 5;
+}
+
+.div-toast-info {
+  font-size: 24px;
+  color: white;
+  border-bottom: dotted 2px white;
+  transition: ease-in;
+}
+
+.button-close-toast {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  padding: 2px 5px;
+}

@@ -3,17 +3,17 @@ import { useNavigate } from "react-router-dom"
 import { FormField } from "../../components/FormField/FormField.components"
 import { useState } from "react"
 import { useUserApi } from "../../../hooks"
+import { useGlobalUser } from "../../../context"
 
 export function Login() {
   const navigate = useNavigate()
   const userApi = useUserApi()
+  const [, setGlobalUser] = useGlobalUser()
 
   const [formData, setFormData] = useState({
     Email: "",
     Senha: "",
   })
-
-  console.log(formData)
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -22,11 +22,10 @@ export function Login() {
 
   async function handleSubmit(event) {
     event.preventDefault()
-    console.log("aqui")
     try {
       const response = await userApi.login(formData)
       const object = JSON.parse(atob(response.split(".")[1]))
-      console.log(object)
+      setGlobalUser(object)
     } catch (error) {
       console.log(error)
     }
@@ -36,7 +35,7 @@ export function Login() {
     <div className="background login-background">
       <div className="div-form div-form-login">
         <h1>Crowdsup</h1>
-        <form action="" className="form-login">
+        <form className="form-login">
           <FormField
             label="E-mail"
             type="text"

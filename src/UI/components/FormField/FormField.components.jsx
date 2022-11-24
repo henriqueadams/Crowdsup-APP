@@ -7,6 +7,7 @@ export function FormField({
   isHalf,
   onChange,
   placeholder = "",
+  isTextArea,
   children,
 }) {
   if (type === "radio") {
@@ -20,13 +21,23 @@ export function FormField({
     return (
       <div className={`div-form-field ${isHalf ? "field-half" : "field-full"}`}>
         <label htmlFor={name}>{label}</label>
-        <input
-          type={type}
-          name={name}
-          id={name}
-          placeholder={placeholder}
-          onChange={(event) => onChange(event)}
-        />
+        {isTextArea ? (
+          <textarea
+            type={type}
+            name={name}
+            id={name}
+            placeholder={placeholder}
+            onChange={(event) => onChange(event)}
+          />
+        ) : (
+          <input
+            type={type}
+            name={name}
+            id={name}
+            placeholder={placeholder}
+            onChange={(event) => onChange(event)}
+          />
+        )}
       </div>
     )
   }

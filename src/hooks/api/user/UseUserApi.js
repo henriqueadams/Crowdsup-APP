@@ -1,8 +1,8 @@
-import { API_URL } from "../../../constants/api"
+import { API_ROUTE } from "../../../constants/routes"
 import { useHttp } from "../base/UseHttp.hook"
 import { useMemo } from "react"
 export function useUserApi() {
-  const httpInstance = useHttp(API_URL)
+  const httpInstance = useHttp(API_ROUTE)
 
   async function registrar(registerValues) {
     const response = await httpInstance.post("/cadastro", registerValues)

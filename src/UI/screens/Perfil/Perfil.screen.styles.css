@@ -1,0 +1,83 @@
+.header-perfil {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px 30px;
+}
+.header-perfil-user {
+  display: flex;
+  align-items: center;
+}
+.header-perfil-user-image {
+  width: 128px;
+  height: 128px;
+}
+.header-perfil-user-infos {
+  margin-left: 20px;
+}
+
+.event-title-perfil {
+  text-align: center;
+  padding: 30px 0;
+}
+
+.header-perfil-contact {
+  text-align: right;
+}
+
+.title-name {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 38px;
+  line-height: 43px;
+  color: var(--smooth-black);
+}
+.medium-text-perfil {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 38px;
+  color: var(--smooth-black);
+}
+.low-text-perfil {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 29px;
+  color: var(--smooth-black);
+  margin-top: 3px;
+}
+.div-inline-text-image {
+  display: flex;
+  align-items: center;
+}
+.div-inline-text-image img {
+  width: 32px;
+  height: 32px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.form-edit-modal-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+  gap: 75px;
+}
+.form-edit-title {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 43px;
+  color: var(--white-smoke);
+}
+.button-modal {
+  margin-top: 30px;
+  align-self: flex-start;
+}
+
+.form-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

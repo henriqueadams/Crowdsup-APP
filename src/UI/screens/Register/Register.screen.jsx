@@ -41,7 +41,7 @@ export function Register() {
     <div className="background login-background">
       <div className="div-form div-form-register">
         <h1>Registro</h1>
-        <form action="" className="form-resgister">
+        <form className="form-resgister">
           <FormField
             label="E-mail"
             name="Email"
