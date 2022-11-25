@@ -1,6 +1,6 @@
 import "./Perfil.screen.styles.css"
 
-import { Header, Event, Modal, FormField } from "../../components/"
+import { Header, Event, FormField } from "../../components/"
 import userImage from "../../../assets/img/user-default.png"
 import editImage from "../../../assets/img/edit.png"
 import { EVENTS } from "../../../constants/events"
@@ -17,6 +17,7 @@ export function Perfil() {
   }
 
   function EditPerfilForm() {
+    // eslint-disable-next-line no-unused-vars
     const [formData, setFormData] = useState({
       Estado: "",
       Cidade: "",
