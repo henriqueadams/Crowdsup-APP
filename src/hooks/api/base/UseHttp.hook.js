@@ -2,11 +2,14 @@ import axios from "axios"
 import { useGlobalUser } from "../../../context"
 
 export function useHttp(baseURL, headers) {
-  const [, setGlobalUser] = useGlobalUser()
+  const [user, setGlobalUser] = useGlobalUser()
 
   const instance = axios.create({
-    baseURL,
-    headers,
+    baseURL: baseURL,
+    headers: {
+      ...headers,
+      Authorization: user,
+    },
   })
 
   async function get(url) {

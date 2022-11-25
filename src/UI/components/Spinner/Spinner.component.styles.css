@@ -1,0 +1,17 @@
+.spinner {
+  border: dashed 2px var(--white-smoke);
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  animation: spin 2s infinite;
+  margin: 1.5px 19px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,12 +1,14 @@
 import "./Event.component.styles.css"
 import calendarIcon from "../../../assets/img/calendar.png"
 import userIcon from "../../../assets/img/user.png"
+import defaultUserImage from "../../../assets/img/user-default.png"
 
 export function Event({ event }) {
-  const { user, date, title, description, city, adreess, isJoined } = event
+  const { organizador, dataEvento, titulo, descricao, endereco, isJoined } =
+    event
 
   function renderButton() {
-    const isExpired = Date.now() > new Date(date).getTime()
+    const isExpired = Date.now() > new Date(dataEvento).getTime()
     if (isExpired) {
       return (
         <button disabled className="button-expired button-medium button-event">
@@ -33,32 +35,34 @@ export function Event({ event }) {
     <div className="div-event">
       <div className="div-event-row">
         <div className="div-event-row">
-          <img src={user.imgProfile} alt="user" />
-          <h4 className="title-large-bold event-user-name">{user.name}</h4>
+          <img src={organizador.imagemPerfil || defaultUserImage} alt="user" />
+          <h4 className="title-large-bold event-user-name">
+            {organizador.nome}
+          </h4>
         </div>
         <div className="div-event-row">
           <p className="title-large-thin">
             <strong className="title-large-bold">Data do evento: </strong>{" "}
-            {`${new Date(date).getDate()}/${
-              new Date(date).getMonth() + 1
-            }/${new Date(date).getFullYear()}`}
+            {`${new Date(dataEvento).getDate()}/${
+              new Date(dataEvento).getMonth() + 1
+            }/${new Date(dataEvento).getFullYear()}`}
           </p>
           <img className="image-margin" src={calendarIcon} alt="calendar" />
         </div>
       </div>
       <div className="div-event-content">
-        <h3 className="title-large-bold event-title">{title}</h3>
-        <p className="title-medium">{description}</p>
+        <h3 className="title-large-bold event-title">{titulo}</h3>
+        <p className="title-medium">{descricao}</p>
       </div>
       <div className="div-event-row">
         <div>
           <p className="title-medium">
             <strong className="adreess-title">Cidade:</strong>
-            {city}
+            {`${endereco.cidade} - ${endereco.estado}`}
           </p>
           <p className="title-medium">
             <strong className="adreess-title">Endereço:</strong>
-            {adreess}
+            {`${endereco.rua}, ${endereco.numero} - ${endereco.bairro}`}
           </p>
         </div>
         <div className="div-event-row">

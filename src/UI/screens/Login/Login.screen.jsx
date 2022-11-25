@@ -1,15 +1,18 @@
 import "./Login.screen.styles.css"
 import { useNavigate } from "react-router-dom"
-import { FormField } from "../../components/FormField/FormField.components"
 import { useState } from "react"
 import { useUserApi } from "../../../hooks"
-import { useGlobalUser } from "../../../context"
+import { useGlobalUser, useGlobalToast } from "../../../context"
+import { TOAST_MESSAGES } from "../../../constants/toast-messages"
+import { Spinner, FormField } from "../../components"
+import { HOME_ROUTE } from "../../../constants/routes"
 
 export function Login() {
+  const [, setGlobalToast] = useGlobalToast()
   const navigate = useNavigate()
   const userApi = useUserApi()
   const [, setGlobalUser] = useGlobalUser()
-
+  const [isWaiting, setIsWaiting] = useState(false)
   const [formData, setFormData] = useState({
     Email: "",
     Senha: "",
@@ -23,11 +26,23 @@ export function Login() {
   async function handleSubmit(event) {
     event.preventDefault()
     try {
+      setIsWaiting(true)
       const response = await userApi.login(formData)
-      const object = JSON.parse(atob(response.split(".")[1]))
-      setGlobalUser(object)
+      setIsWaiting(false)
+      setGlobalUser(`Bearer ${response}`)
+      setGlobalToast((currentValue) => ({
+        ...currentValue,
+        showToast: true,
+        content: TOAST_MESSAGES.LOGIN_SUCCESS,
+      }))
+      navigate(HOME_ROUTE)
     } catch (error) {
-      console.log(error)
+      setIsWaiting(false)
+      setGlobalToast((currentValue) => ({
+        ...currentValue,
+        showToast: true,
+        content: TOAST_MESSAGES.LOGIN_ERROR,
+      }))
     }
   }
 
@@ -54,7 +69,7 @@ export function Login() {
             onClick={(event) => handleSubmit(event)}
             className="button-large button-primary"
           >
-            Login
+            {isWaiting ? <Spinner /> : "Login"}
           </button>
           <div className="form-footer-sing-in-up">
             <p>Não possui uma conta?</p>

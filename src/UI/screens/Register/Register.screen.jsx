@@ -1,13 +1,16 @@
 import "./Register.screen.styles.css"
 import { useNavigate } from "react-router-dom"
-import { FormField } from "../../components"
+import { FormField, Spinner } from "../../components"
 import { useState } from "react"
 import { useUserApi } from "../../../hooks"
-
+import { useGlobalToast } from "../../../context"
+import { TOAST_MESSAGES } from "../../../constants/toast-messages"
+import { LOGIN_ROUTE } from "../../../constants/routes"
 export function Register() {
+  const [, setGlobalToast] = useGlobalToast()
   const navigate = useNavigate()
   const userApi = useUserApi()
-
+  const [isWaiting, setIsWaiting] = useState(false)
   const [formData, setFormData] = useState({
     Email: "",
     Nome: "",
@@ -19,8 +22,6 @@ export function Register() {
     Sexo: 1,
   })
 
-  console.log(formData)
-
   function handleChange(event) {
     const { name, value } = event.target
     setFormData((currentValue) => ({ ...currentValue, [name]: value }))
@@ -30,10 +31,22 @@ export function Register() {
     event.preventDefault()
     formData.Sexo = parseInt(formData.Sexo)
     try {
+      setIsWaiting(true)
       await userApi.registrar(formData)
-      console.log("é pra ter funcionado")
+      setIsWaiting(false)
+      setGlobalToast((currentValue) => ({
+        ...currentValue,
+        showToast: true,
+        content: TOAST_MESSAGES.REGISTER_SUCCESS,
+      }))
+      navigate(LOGIN_ROUTE)
     } catch (error) {
-      console.log(error)
+      setIsWaiting(false)
+      setGlobalToast((currentValue) => ({
+        ...currentValue,
+        showToast: true,
+        content: TOAST_MESSAGES.REGISTER_ERROR,
+      }))
     }
   }
 
@@ -117,7 +130,7 @@ export function Register() {
             className="button-large button-primary"
             type="submit"
           >
-            Registrar
+            {isWaiting ? <Spinner /> : "Registrar"}
           </button>
           <div className="form-footer-sing-in-up">
             <p>Já possui uma conta?</p>

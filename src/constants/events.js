@@ -53,3 +53,33 @@ export const EVENTS = [
     isJoined: false,
   },
 ]
+
+// {
+//   "eventos": [
+//       {
+//           "id": 2,
+//           "titulo": "Evento Teste 2",
+//           "descricao": "Testando evento",
+//           "endereco": {
+//               "estado": "RS",
+//               "cidade": "Rolante",
+//               "bairro": "Centro",
+//               "rua": "Central",
+//               "numero": "49"
+//           },
+//           "dataEvento": "2022-11-30T00:00:00+00:00",
+//           "organizador": {
+//               "id": 1,
+//               "nome": "Henrique Teste2",
+//               "dataNascimento": "2000-09-08T21:00:00+00:00",
+//               "cidade": "Rolante",
+//               "estado": "RS",
+//               "telefone": "51980291352",
+//               "sexo": 1
+//           },
+//           "quantidadeVoluntariosNecessarios": 4,
+//           "quantidadeParticipantes": 1
+//       }
+//   ],
+//   "pagina": 1
+// }

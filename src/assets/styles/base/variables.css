@@ -10,6 +10,11 @@
   --button-expired: #848484;
   --white-smoke: #f1f6f9;
 
+  /* toast colors */
+  --toast-success: #4ba256;
+  --toast-danger: #c64242;
+  --toast-info: #3eabc6;
+  --toast-warning: #de954b;
   /* fonts */
   --font-bitter: "Bitter";
 

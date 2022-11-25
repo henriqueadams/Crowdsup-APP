@@ -9,6 +9,7 @@ export function FormField({
   placeholder = "",
   isTextArea,
   children,
+  value,
 }) {
   if (type === "radio") {
     return (
@@ -28,12 +29,14 @@ export function FormField({
             id={name}
             placeholder={placeholder}
             onChange={(event) => onChange(event)}
+            value={value}
           />
         ) : (
           <input
             type={type}
             name={name}
             id={name}
+            value={value}
             placeholder={placeholder}
             onChange={(event) => onChange(event)}
           />

@@ -11,7 +11,7 @@ export function Modal() {
   return globalModal.showModal ? (
     <div className="div-modal-background">
       <div className="div-modal-content">
-        <button className="button-close-toast" onClick={handleClose}>
+        <button className="button-close-modal" onClick={handleClose}>
           X
         </button>
         {globalModal.content && globalModal.content()}
