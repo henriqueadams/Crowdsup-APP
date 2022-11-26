@@ -10,8 +10,27 @@ export function useEventsApi() {
     return response
   }
 
+  async function listarEventosPesquisa(search) {
+    const response = await httpInstance.get(
+      `/eventos/pesquisar?Pagina=1&Cidade=${search}`
+    )
+    return response
+  }
+
   async function criarEvento(event) {
     const response = await httpInstance.post("/eventos", event)
+    return response
+  }
+
+  async function entrarEvento(eventId) {
+    const response = await httpInstance.post(
+      `/eventos/join?EventoId=${eventId}`
+    )
+    return response
+  }
+
+  async function sairEvento(eventId) {
+    const response = await httpInstance.put(`/eventos/cancelar`, eventId)
     return response
   }
 
@@ -19,6 +38,9 @@ export function useEventsApi() {
     () => ({
       listarEventos,
       criarEvento,
+      entrarEvento,
+      sairEvento,
+      listarEventosPesquisa,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

@@ -1,16 +1,18 @@
-import { SearchBar } from "../SearchBar/SearchBar.component"
 import "./Header.component.styles.css"
 import { useState } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 import { HOME_ROUTE, PERFIL_ROUTE } from "../../../constants/routes"
-import { Modal } from "../../components"
+import { Modal, SearchBar } from "../../components"
 import { useGlobalModal } from "../../../context"
 import { AddEventForm } from "./FormEvent.section"
-export function Header() {
+import defaultUserImage from "../../../assets/img/user-default.png"
+import { useUserApi } from "../../../hooks"
+
+export function Header({ userLogged }) {
   const [, setGlobalModal] = useGlobalModal()
   const [dropdown, setDropDown] = useState()
   const navigate = useNavigate()
-
+  const userApi = useUserApi()
   return (
     <div className="div-header">
       <Modal />
@@ -20,7 +22,9 @@ export function Header() {
         </h1>
         <SearchBar />
         <div className="div-menu">
-          <div onClick={() => setDropDown(!dropdown)} className="user-image" />
+          <div onClick={() => setDropDown(!dropdown)} className="user-image">
+            <img src={userLogged?.imagemPerfil || defaultUserImage} alt="" />
+          </div>
           {dropdown && (
             <ul className="dropdown">
               <li>
@@ -37,7 +41,7 @@ export function Header() {
               >
                 Adicionar Evento
               </li>
-              <li>Logout</li>
+              <li onClick={() => userApi.logout()}>Logout</li>
             </ul>
           )}
         </div>

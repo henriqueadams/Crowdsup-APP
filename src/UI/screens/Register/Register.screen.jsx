@@ -2,15 +2,20 @@ import "./Register.screen.styles.css"
 import { useNavigate } from "react-router-dom"
 import { FormField, Spinner } from "../../components"
 import { useState } from "react"
-import { useUserApi } from "../../../hooks"
+import { useUserApi, useIBGEApi } from "../../../hooks"
 import { useGlobalToast } from "../../../context"
 import { TOAST_MESSAGES } from "../../../constants/toast-messages"
 import { LOGIN_ROUTE } from "../../../constants/routes"
+import { useEffect } from "react"
 export function Register() {
   const [, setGlobalToast] = useGlobalToast()
   const navigate = useNavigate()
   const userApi = useUserApi()
+  const ibgeApi = useIBGEApi()
   const [isWaiting, setIsWaiting] = useState(false)
+  const [stateList, setStateList] = useState([])
+  const [cityList, setCityList] = useState([])
+
   const [formData, setFormData] = useState({
     Email: "",
     Nome: "",
@@ -21,6 +26,48 @@ export function Register() {
     Telefone: "",
     Sexo: 1,
   })
+
+  console.log(formData)
+
+  useEffect(() => {
+    async function fetchEstados() {
+      try {
+        const response = await ibgeApi.listarEstados()
+        setStateList(response)
+      } catch (error) {
+        setGlobalToast((currentValue) => ({
+          ...currentValue,
+          showToast: true,
+          content: TOAST_MESSAGES.DEFAULT_ERROR,
+        }))
+      }
+    }
+    fetchEstados()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ibgeApi])
+
+  useEffect(() => {
+    async function fetchCity() {
+      try {
+        const seletedStateId = stateList.find(
+          (state) => state.nome === formData.Estado
+        ).id
+        console.log(seletedStateId)
+        const response = await ibgeApi.listarMunicipios(seletedStateId)
+        setCityList(response)
+      } catch (error) {
+        setGlobalToast((currentValue) => ({
+          ...currentValue,
+          showToast: true,
+          content: TOAST_MESSAGES.DEFAULT_ERROR,
+        }))
+      }
+    }
+    if (formData.Estado) {
+      fetchCity()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ibgeApi, formData.Estado, stateList])
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -60,6 +107,7 @@ export function Register() {
             name="Email"
             type="text"
             onChange={handleChange}
+            isMandatory
           />
           <FormField
             label="Nome completo"
@@ -67,6 +115,7 @@ export function Register() {
             type="text"
             isHalf
             onChange={handleChange}
+            isMandatory
           />
           <FormField
             label="Senha"
@@ -74,6 +123,7 @@ export function Register() {
             type="password"
             isHalf
             onChange={handleChange}
+            isMandatory
           />
           <FormField
             label="Data de nascimento"
@@ -81,20 +131,25 @@ export function Register() {
             type="date"
             isHalf
             onChange={handleChange}
+            isMandatory
           />
           <FormField
             label="Estado"
             name="Estado"
-            type="text"
+            type="select"
+            content={stateList.map((state) => state.nome)}
             isHalf
             onChange={handleChange}
+            isMandatory
           />
           <FormField
             label="Cidade"
             name="Cidade"
-            type="text"
+            type="select"
+            content={cityList.map((state) => state.nome)}
             isHalf
             onChange={handleChange}
+            isMandatory
           />
           <FormField
             label="Telefone"
@@ -102,8 +157,9 @@ export function Register() {
             type="text"
             isHalf
             onChange={handleChange}
+            isMandatory
           />
-          <FormField label="Sexo" name="Sexo" type="radio" isHalf>
+          <FormField label="Sexo" name="Sexo" type="radio" isHalf isMandatory>
             <input
               type="radio"
               name="Sexo"

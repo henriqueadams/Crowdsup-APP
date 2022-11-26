@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom"
-import { Login, Register, Home, Perfil } from "./UI/screens"
+import { Login, Register, Home, Perfil, SearchResponse } from "./UI/screens"
 import { Toast } from "./UI/components"
 import { Navigate } from "react-router-dom"
 import "./assets/styles/base/reset.css"
@@ -8,8 +8,8 @@ import "./assets/styles/global/global.css"
 import { useGlobalUser } from "./context"
 
 const PrivateRoute = ({ children }) => {
-  const [globalUser] = useGlobalUser()
-  if (globalUser.length) {
+  const [user] = useGlobalUser()
+  if (user.length) {
     return <>{children}</>
   }
   return <Navigate to="/" />
@@ -31,10 +31,18 @@ function App() {
           }
         />
         <Route
-          path="/perfil"
+          path="/perfil/:id"
           element={
             <PrivateRoute>
               <Perfil />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/pesquisa/:search"
+          element={
+            <PrivateRoute>
+              <SearchResponse />
             </PrivateRoute>
           }
         />

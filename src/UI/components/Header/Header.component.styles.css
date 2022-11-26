@@ -40,10 +40,6 @@
 }
 
 .user-image {
-  background-image: url(../../../assets/img/user-default.png);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
   height: 56px;
   width: 56px;
   margin-left: 46px;

@@ -2,10 +2,62 @@ import "./Event.component.styles.css"
 import calendarIcon from "../../../assets/img/calendar.png"
 import userIcon from "../../../assets/img/user.png"
 import defaultUserImage from "../../../assets/img/user-default.png"
+import { useEventsApi } from "../../../hooks"
+import { useGlobalToast } from "../../../context"
+import { TOAST_MESSAGES } from "../../../constants/toast-messages"
+import { useNavigate } from "react-router-dom"
+import { PERFIL_ROUTE } from "../../../constants/routes"
+export function Event({ event, attEvents }) {
+  const {
+    id,
+    organizador,
+    dataEvento,
+    titulo,
+    descricao,
+    endereco,
+    quantidadeParticipantes,
+    quantidadeVoluntariosNecessarios,
+    isJoined,
+  } = event
+  const navigate = useNavigate()
+  const eventsApi = useEventsApi()
+  const [, setGlobalToast] = useGlobalToast()
 
-export function Event({ event }) {
-  const { organizador, dataEvento, titulo, descricao, endereco, isJoined } =
-    event
+  async function handleJoin() {
+    try {
+      await eventsApi.entrarEvento(id)
+      setGlobalToast((currentValue) => ({
+        ...currentValue,
+        showToast: true,
+        content: TOAST_MESSAGES.EVENT_JOIN_SUCCESS,
+      }))
+      attEvents((currentValue) => !currentValue)
+    } catch (error) {
+      setGlobalToast((currentValue) => ({
+        ...currentValue,
+        showToast: true,
+        content: TOAST_MESSAGES.EVENT_JOIN_ERROR,
+      }))
+    }
+  }
+
+  async function handleCancel() {
+    try {
+      await eventsApi.sairEvento({ EventoId: id })
+      setGlobalToast((currentValue) => ({
+        ...currentValue,
+        showToast: true,
+        content: TOAST_MESSAGES.EVENT_CANCEL_SUCCESS,
+      }))
+      attEvents((currentValue) => !currentValue)
+    } catch (error) {
+      setGlobalToast((currentValue) => ({
+        ...currentValue,
+        showToast: true,
+        content: TOAST_MESSAGES.EVENT_CANCEL_ERROR,
+      }))
+    }
+  }
 
   function renderButton() {
     const isExpired = Date.now() > new Date(dataEvento).getTime()
@@ -18,13 +70,26 @@ export function Event({ event }) {
     }
     if (isJoined) {
       return (
-        <button className="button-secondary button-medium button-event">
+        <button
+          onClick={handleCancel}
+          className="button-secondary button-medium button-event"
+        >
           Cancelar
+        </button>
+      )
+    }
+    if (quantidadeParticipantes === quantidadeVoluntariosNecessarios) {
+      return (
+        <button disabled className="button-expired button-medium button-event">
+          Cheio
         </button>
       )
     } else {
       return (
-        <button className="button-primary button-medium button-event">
+        <button
+          onClick={handleJoin}
+          className="button-primary button-medium button-event"
+        >
           Juntar-se
         </button>
       )
@@ -34,7 +99,10 @@ export function Event({ event }) {
   return (
     <div className="div-event">
       <div className="div-event-row">
-        <div className="div-event-row">
+        <div
+          className="div-event-row"
+          onClick={() => navigate(PERFIL_ROUTE(organizador.id))}
+        >
           <img src={organizador.imagemPerfil || defaultUserImage} alt="user" />
           <h4 className="title-large-bold event-user-name">
             {organizador.nome}
@@ -67,7 +135,7 @@ export function Event({ event }) {
         </div>
         <div className="div-event-row">
           <div className="div-event-row">
-            <p className="title-large-thin">2/5</p>
+            <p className="title-large-thin">{`${quantidadeParticipantes} / ${quantidadeVoluntariosNecessarios}`}</p>
             <img className="image-margin" src={userIcon} alt="user-icon" />
           </div>
           {renderButton()}

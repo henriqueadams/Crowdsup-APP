@@ -20,7 +20,8 @@
 }
 
 .div-form-field input,
-.div-form-field textarea {
+.div-form-field textarea,
+.div-form-field select {
   height: 40px;
   font-size: 24px;
   padding: 0 12px;
@@ -42,6 +43,13 @@
 .div-form-field-radio label {
   margin-left: 12px;
   margin-right: 18px;
+}
+
+.input-error {
+  border: red 2px solid;
+}
+.radio-error label {
+  border-bottom: red 1px solid;
 }
 
 @media screen and (max-width: 768px) {

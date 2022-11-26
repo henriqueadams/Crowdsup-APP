@@ -1,11 +1,13 @@
+import "./SearchResponse.screen.styles.css"
 import { Header, Event } from "../../components/"
-import "./Home.screen.styles.css"
 import { useEffect } from "react"
 import { useEventsApi, useUserApi } from "../../../hooks"
 import { useState } from "react"
 import { useGlobalModal } from "../../../context"
-export function Home() {
+import { useParams } from "react-router-dom"
+export function SearchResponse() {
   const eventsApi = useEventsApi()
+  const { search } = useParams()
   const [listaEventos, setListaEventos] = useState([])
   const [loggedUser, setLoggedUser] = useState()
   const userApi = useUserApi()
@@ -23,7 +25,7 @@ export function Home() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const response = await eventsApi.listarEventos()
+        const response = await eventsApi.listarEventosPesquisa(search)
         setListaEventos(response.eventos)
       } catch (error) {
         console.log(error)
@@ -32,6 +34,8 @@ export function Home() {
     fetchEvents()
   }, [eventsApi, globalModal, attEvents])
 
+  console.log(listaEventos)
+
   return (
     <div className="background default-background-color">
       <Header userLogged={loggedUser} />
@@ -39,8 +43,8 @@ export function Home() {
         <div className="default-container">
           <h2 className="home-title">
             {listaEventos.length
-              ? "Ações Sociais em " + loggedUser?.cidade
-              : "Não encontramos ações sociais em " + loggedUser?.cidade}
+              ? "Ações Sociais encontradas para: " + search
+              : "Não encontramos nenhum evento para " + search}
           </h2>
           <div className="div-events">
             {listaEventos.map((event) => {

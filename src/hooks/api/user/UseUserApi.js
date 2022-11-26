@@ -1,8 +1,12 @@
-import { API_ROUTE } from "../../../constants/routes"
+import { API_ROUTE, LOGIN_ROUTE } from "../../../constants/routes"
 import { useHttp } from "../base/UseHttp.hook"
 import { useMemo } from "react"
+import { useGlobalUser } from "../../../context"
+import { useNavigate } from "react-router-dom"
 export function useUserApi() {
   const httpInstance = useHttp(API_ROUTE)
+  const navigate = useNavigate()
+  const [, setGlobalUser] = useGlobalUser()
 
   async function registrar(registerValues) {
     const response = await httpInstance.post("/cadastro", registerValues)
@@ -14,10 +18,28 @@ export function useUserApi() {
     return response
   }
 
+  async function logout() {
+    setGlobalUser({})
+    navigate(LOGIN_ROUTE)
+  }
+
+  async function detalhar() {
+    const response = await httpInstance.get("/usuarios")
+    return response
+  }
+
+  async function listarPerfil() {
+    const response = await httpInstance.get("/usuarios")
+    return response
+  }
+
   return useMemo(
     () => ({
       registrar,
       login,
+      detalhar,
+      listarPerfil,
+      logout,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

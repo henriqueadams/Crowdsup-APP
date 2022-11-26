@@ -2,10 +2,12 @@ import "./FormEvent.styles.css"
 import { FormField } from "../../components"
 import { useState } from "react"
 import { useEventsApi } from "../../../hooks"
-
+import { useGlobalToast, useGlobalModal } from "../../../context"
+import { TOAST_MESSAGES } from "../../../constants/toast-messages"
 export function AddEventForm() {
   const eventsApi = useEventsApi()
-
+  const [, setGlobalToast] = useGlobalToast()
+  const [, setGlobalModal] = useGlobalModal()
   const [formData, setFormData] = useState({
     Titulo: "",
     Descricao: "",
@@ -19,7 +21,6 @@ export function AddEventForm() {
     DataEvento: "",
     QuantidadeVoluntariosNecessarios: "",
   })
-  console.log(formData)
 
   function handleChange(event) {
     const { name, value, type } = event.target
@@ -42,12 +43,20 @@ export function AddEventForm() {
 
   async function handleSubmit(event) {
     event.preventDefault()
-    console.log("chegou aqui?")
     try {
       await eventsApi.criarEvento(formData)
-      console.log("foi")
+      setGlobalModal((currentValue) => ({ ...currentValue, showModal: false }))
+      setGlobalToast((currentValue) => ({
+        ...currentValue,
+        showToast: true,
+        content: TOAST_MESSAGES.EVENT_REGISTER_SUCCESS,
+      }))
     } catch (error) {
-      console.log(error)
+      setGlobalToast((currentValue) => ({
+        ...currentValue,
+        showToast: true,
+        content: TOAST_MESSAGES.EVENT_REGISTER_ERROR,
+      }))
     }
   }
 

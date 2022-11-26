@@ -37,11 +37,16 @@ export function Login() {
       }))
       navigate(HOME_ROUTE)
     } catch (error) {
+      console.log(error)
+
       setIsWaiting(false)
       setGlobalToast((currentValue) => ({
         ...currentValue,
         showToast: true,
-        content: TOAST_MESSAGES.LOGIN_ERROR,
+        content:
+          error?.response?.status === 401
+            ? TOAST_MESSAGES.LOGIN_PASSWORD_ERROR
+            : TOAST_MESSAGES.LOGIN_ERROR,
       }))
     }
   }
