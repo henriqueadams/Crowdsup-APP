@@ -1,13 +1,19 @@
 import "./FormEvent.styles.css"
-import { FormField } from "../../components"
-import { useState } from "react"
-import { useEventsApi } from "../../../hooks"
+import { FormField, Spinner } from "../../components"
+import { useState, useEffect } from "react"
+import { useEventsApi, useIBGEApi } from "../../../hooks"
 import { useGlobalToast, useGlobalModal } from "../../../context"
 import { TOAST_MESSAGES } from "../../../constants/toast-messages"
+import { FORM_CREATE_EVENT_VALIDATOR } from "../../../constants/form-validator"
 export function AddEventForm() {
   const eventsApi = useEventsApi()
+  const ibgeApi = useIBGEApi()
   const [, setGlobalToast] = useGlobalToast()
   const [, setGlobalModal] = useGlobalModal()
+  const [isWaiting, setIsWaiting] = useState(false)
+  const [stateList, setStateList] = useState([])
+  const [cityList, setCityList] = useState([])
+  const [errorList, setErrorList] = useState([])
   const [formData, setFormData] = useState({
     Titulo: "",
     Descricao: "",
@@ -21,6 +27,45 @@ export function AddEventForm() {
     DataEvento: "",
     QuantidadeVoluntariosNecessarios: "",
   })
+
+  useEffect(() => {
+    async function fetchCity() {
+      try {
+        const seletedStateId = stateList.find(
+          (state) => state.nome === formData.Endereco.Estado
+        ).id
+        const response = await ibgeApi.listarMunicipios(seletedStateId)
+        setCityList(response)
+      } catch (error) {
+        setGlobalToast((currentValue) => ({
+          ...currentValue,
+          showToast: true,
+          content: TOAST_MESSAGES.DEFAULT_ERROR,
+        }))
+      }
+    }
+    if (formData.Endereco.Estado) {
+      fetchCity()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ibgeApi, formData.Endereco.Estado, stateList])
+
+  useEffect(() => {
+    async function fetchEstados() {
+      try {
+        const response = await ibgeApi.listarEstados()
+        setStateList(response)
+      } catch (error) {
+        setGlobalToast((currentValue) => ({
+          ...currentValue,
+          showToast: true,
+          content: TOAST_MESSAGES.DEFAULT_ERROR,
+        }))
+      }
+    }
+    fetchEstados()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ibgeApi])
 
   function handleChange(event) {
     const { name, value, type } = event.target
@@ -43,8 +88,31 @@ export function AddEventForm() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    const inputsAddressWithError = Object.keys(formData.Endereco)
+      .filter((inputName) => {
+        const value = formData.Endereco[inputName]
+        const validatorFunction = FORM_CREATE_EVENT_VALIDATOR[inputName]
+        const isFieldValid = validatorFunction(value)
+        return !isFieldValid
+      })
+      .map((inputName) => inputName)
+    const inputsWithError = Object.keys(formData)
+      .filter((key) => key !== "Endereco")
+      .filter((inputName) => {
+        const value = formData[inputName]
+        const validatorFunction = FORM_CREATE_EVENT_VALIDATOR[inputName]
+        const isFieldValid = validatorFunction(value)
+        return !isFieldValid
+      })
+    const allInputsWithError = [...inputsWithError, ...inputsAddressWithError]
+    if (allInputsWithError.length) {
+      return setErrorList(allInputsWithError)
+    }
     try {
+      setIsWaiting(true)
       await eventsApi.criarEvento(formData)
+      setErrorList([])
+      setIsWaiting(false)
       setGlobalModal((currentValue) => ({ ...currentValue, showModal: false }))
       setGlobalToast((currentValue) => ({
         ...currentValue,
@@ -52,6 +120,7 @@ export function AddEventForm() {
         content: TOAST_MESSAGES.EVENT_REGISTER_SUCCESS,
       }))
     } catch (error) {
+      setIsWaiting(false)
       setGlobalToast((currentValue) => ({
         ...currentValue,
         showToast: true,
@@ -65,20 +134,26 @@ export function AddEventForm() {
       <h2 className="form-modal-title">Divulgar evento</h2>
       <form className="form-event">
         <FormField
-          label="Cidade"
-          name="Cidade"
-          type="text"
-          onChange={handleChangeEndereco}
-          isHalf
-          value={formData.Endereco.Cidade}
-        />
-        <FormField
           label="Estado"
           name="Estado"
-          type="text"
+          type="select"
+          content={stateList.map((state) => state.nome)}
           onChange={handleChangeEndereco}
-          isHalf
           value={formData.Endereco.Estado}
+          isError={errorList.includes("Estado")}
+          isMandatory
+          isHalf
+        />
+        <FormField
+          label="Cidade"
+          name="Cidade"
+          type="select"
+          content={cityList.map((state) => state.nome)}
+          onChange={handleChangeEndereco}
+          value={formData.Endereco.Cidade}
+          isError={errorList.includes("Cidade")}
+          isMandatory
+          isHalf
         />
         <FormField
           label="Rua"
@@ -86,6 +161,7 @@ export function AddEventForm() {
           type="text"
           onChange={handleChangeEndereco}
           value={formData.Endereco.Rua}
+          isError={errorList.includes("Rua")}
         />
         <FormField
           label="Bairro"
@@ -94,6 +170,7 @@ export function AddEventForm() {
           onChange={handleChangeEndereco}
           isHalf
           value={formData.Endereco.Bairro}
+          isError={errorList.includes("Bairro")}
         />
 
         <FormField
@@ -103,6 +180,7 @@ export function AddEventForm() {
           onChange={handleChangeEndereco}
           isHalf
           value={formData.Endereco.Numero}
+          isError={errorList.includes("Numero")}
         />
         <FormField
           label="Qtd. de Volutários"
@@ -111,6 +189,7 @@ export function AddEventForm() {
           onChange={handleChange}
           value={formData.QuantidadeVoluntariosNecessarios}
           isHalf
+          isError={errorList.includes("QuantidadeVoluntariosNecessarios")}
         />
         <FormField
           label="Data do evento"
@@ -119,6 +198,7 @@ export function AddEventForm() {
           onChange={handleChange}
           value={formData.DataEvento}
           isHalf
+          isError={errorList.includes("DataEvento")}
         />
         <FormField
           label="Titulo"
@@ -126,6 +206,7 @@ export function AddEventForm() {
           type="text"
           onChange={handleChange}
           value={formData.Titulo}
+          isError={errorList.includes("Titulo")}
         />
         <FormField
           label="Descricao"
@@ -134,6 +215,7 @@ export function AddEventForm() {
           isTextArea
           onChange={handleChange}
           value={formData.Descricao}
+          isError={errorList.includes("Descricao")}
         />
       </form>
       <button
@@ -141,7 +223,7 @@ export function AddEventForm() {
         className="button-medium button-primary button-modal"
         type="submit"
       >
-        Divulgar
+        {isWaiting ? <Spinner /> : "Divulgar"}
       </button>
     </div>
   )

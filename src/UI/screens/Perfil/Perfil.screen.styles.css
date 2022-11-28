@@ -11,6 +11,7 @@
 .header-perfil-user-image {
   width: 128px;
   height: 128px;
+  border-radius: 50%;
 }
 .header-perfil-user-infos {
   margin-left: 20px;

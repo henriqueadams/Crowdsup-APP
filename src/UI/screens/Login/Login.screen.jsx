@@ -6,6 +6,7 @@ import { useGlobalUser, useGlobalToast } from "../../../context"
 import { TOAST_MESSAGES } from "../../../constants/toast-messages"
 import { Spinner, FormField } from "../../components"
 import { HOME_ROUTE } from "../../../constants/routes"
+import { FORM_LOGIN_VALIDATOR } from "../../../constants/form-validator"
 
 export function Login() {
   const [, setGlobalToast] = useGlobalToast()
@@ -13,6 +14,7 @@ export function Login() {
   const userApi = useUserApi()
   const [, setGlobalUser] = useGlobalUser()
   const [isWaiting, setIsWaiting] = useState(false)
+  const [errorList, setErrorList] = useState([])
   const [formData, setFormData] = useState({
     Email: "",
     Senha: "",
@@ -25,10 +27,22 @@ export function Login() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    const inputsWithError = Object.keys(formData)
+      .filter((inputName) => {
+        const value = formData[inputName]
+        const validatorFunction = FORM_LOGIN_VALIDATOR[inputName]
+        const isFieldValid = validatorFunction(value)
+        return !isFieldValid
+      })
+      .map((inputName) => inputName)
+    if (inputsWithError.length) {
+      return setErrorList(inputsWithError)
+    }
     try {
       setIsWaiting(true)
       const response = await userApi.login(formData)
       setIsWaiting(false)
+      setErrorList([])
       setGlobalUser(`Bearer ${response}`)
       setGlobalToast((currentValue) => ({
         ...currentValue,
@@ -37,8 +51,6 @@ export function Login() {
       }))
       navigate(HOME_ROUTE)
     } catch (error) {
-      console.log(error)
-
       setIsWaiting(false)
       setGlobalToast((currentValue) => ({
         ...currentValue,
@@ -61,12 +73,14 @@ export function Login() {
             type="text"
             name="Email"
             onChange={handleChange}
+            isError={errorList.includes("Email")}
           />
           <FormField
             label="Senha"
             type="password"
             name="Senha"
             onChange={handleChange}
+            isError={errorList.includes("Senha")}
           />
         </form>
         <div className="form-footer">

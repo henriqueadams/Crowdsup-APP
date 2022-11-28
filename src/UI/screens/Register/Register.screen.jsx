@@ -5,6 +5,7 @@ import { useState } from "react"
 import { useUserApi, useIBGEApi } from "../../../hooks"
 import { useGlobalToast } from "../../../context"
 import { TOAST_MESSAGES } from "../../../constants/toast-messages"
+import { FORM_REGISTER_VALIDATOR } from "../../../constants/form-validator"
 import { LOGIN_ROUTE } from "../../../constants/routes"
 import { useEffect } from "react"
 export function Register() {
@@ -15,6 +16,7 @@ export function Register() {
   const [isWaiting, setIsWaiting] = useState(false)
   const [stateList, setStateList] = useState([])
   const [cityList, setCityList] = useState([])
+  const [errorList, setErrorList] = useState([])
 
   const [formData, setFormData] = useState({
     Email: "",
@@ -26,8 +28,6 @@ export function Register() {
     Telefone: "",
     Sexo: 1,
   })
-
-  console.log(formData)
 
   useEffect(() => {
     async function fetchEstados() {
@@ -52,7 +52,6 @@ export function Register() {
         const seletedStateId = stateList.find(
           (state) => state.nome === formData.Estado
         ).id
-        console.log(seletedStateId)
         const response = await ibgeApi.listarMunicipios(seletedStateId)
         setCityList(response)
       } catch (error) {
@@ -77,9 +76,21 @@ export function Register() {
   async function handleSubmit(event) {
     event.preventDefault()
     formData.Sexo = parseInt(formData.Sexo)
+    const inputsWithError = Object.keys(formData)
+      .filter((inputName) => {
+        const value = formData[inputName]
+        const validatorFunction = FORM_REGISTER_VALIDATOR[inputName]
+        const isFieldValid = validatorFunction(value)
+        return !isFieldValid
+      })
+      .map((inputName) => inputName)
+    if (inputsWithError.length) {
+      return setErrorList(inputsWithError)
+    }
     try {
       setIsWaiting(true)
       await userApi.registrar(formData)
+      setErrorList([])
       setIsWaiting(false)
       setGlobalToast((currentValue) => ({
         ...currentValue,
@@ -108,6 +119,7 @@ export function Register() {
             type="text"
             onChange={handleChange}
             isMandatory
+            isError={errorList.includes("Email")}
           />
           <FormField
             label="Nome completo"
@@ -116,6 +128,7 @@ export function Register() {
             isHalf
             onChange={handleChange}
             isMandatory
+            isError={errorList.includes("Nome")}
           />
           <FormField
             label="Senha"
@@ -124,6 +137,7 @@ export function Register() {
             isHalf
             onChange={handleChange}
             isMandatory
+            isError={errorList.includes("Senha")}
           />
           <FormField
             label="Data de nascimento"
@@ -132,6 +146,7 @@ export function Register() {
             isHalf
             onChange={handleChange}
             isMandatory
+            isError={errorList.includes("DataNascimento")}
           />
           <FormField
             label="Estado"
@@ -141,6 +156,7 @@ export function Register() {
             isHalf
             onChange={handleChange}
             isMandatory
+            isError={errorList.includes("Estado")}
           />
           <FormField
             label="Cidade"
@@ -150,27 +166,37 @@ export function Register() {
             isHalf
             onChange={handleChange}
             isMandatory
+            isError={errorList.includes("Cidade")}
           />
           <FormField
             label="Telefone"
             name="Telefone"
             type="text"
+            maxLength={11}
             isHalf
             onChange={handleChange}
             isMandatory
+            isError={errorList.includes("Telefone")}
           />
-          <FormField label="Sexo" name="Sexo" type="radio" isHalf isMandatory>
+          <FormField
+            label="Sexo"
+            name="Sexo"
+            type="radio"
+            isHalf
+            isMandatory
+            isError={errorList.includes("Sexo")}
+          >
             <input
               type="radio"
               name="Sexo"
               id="man"
               value={1}
               onChange={handleChange}
-              checked={formData.Sexo === "1"}
+              checked={formData.Sexo === 1}
             />
             <label htmlFor="man">Masculino</label>
             <input
-              checked={formData.Sexo === "2"}
+              checked={formData.Sexo === 2}
               type="radio"
               name="Sexo"
               id="woman"

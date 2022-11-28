@@ -36,11 +36,23 @@ export const TOAST_MESSAGES = {
     color: "var(--toast-danger)",
   },
   EVENT_CANCEL_SUCCESS: {
+    message: "Cancelado seu evento",
+    color: "var(--toast-success)",
+  },
+  EVENT_EXIT_SUCCESS: {
     message: "Cancelada participação no evento",
     color: "var(--toast-success)",
   },
   EVENT_CANCEL_ERROR: {
     message: "Não foi possivel cancelar participação no evento",
+    color: "var(--toast-danger)",
+  },
+  EDIT_SUCCESS: {
+    message: "Perfil editado com sucesso",
+    color: "var(--toast-success)",
+  },
+  EDIT_ERROR: {
+    message: "Não foi possivel editar o perfil",
     color: "var(--toast-danger)",
   },
   DEFAULT_ERROR: {

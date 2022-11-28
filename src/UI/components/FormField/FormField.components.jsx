@@ -13,6 +13,7 @@ export function FormField({
   isMandatory = false,
   isError = false,
   content,
+  maxLength,
 }) {
   if (type === "radio") {
     return (
@@ -35,7 +36,7 @@ export function FormField({
           value={value}
           className={isError ? "input-error" : ""}
         >
-          <option selected disabled>
+          <option disabled value={""}>
             {`Selecione um ${name}`}
           </option>
           {content.map((state, index) => {
@@ -71,6 +72,7 @@ export function FormField({
             value={value}
             placeholder={placeholder}
             onChange={(event) => onChange(event)}
+            maxLength={maxLength}
           />
         )}
       </div>

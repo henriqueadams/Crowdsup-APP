@@ -9,6 +9,10 @@
   gap: 25px;
 }
 
+.div-user-infos {
+  cursor: pointer;
+}
+
 .div-event-row {
   display: flex;
   justify-content: space-between;
@@ -46,4 +50,9 @@
 }
 .image-margin {
   margin-left: 10px;
+}
+.event-user-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
 }

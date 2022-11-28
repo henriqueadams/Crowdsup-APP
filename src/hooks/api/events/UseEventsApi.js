@@ -10,6 +10,13 @@ export function useEventsApi() {
     return response
   }
 
+  async function listarEventosPerfil(usuarioId) {
+    const response = await httpInstance.get(
+      `/eventos/perfil?Pagina=1&UsuarioId=${usuarioId}`
+    )
+    return response
+  }
+
   async function listarEventosPesquisa(search) {
     const response = await httpInstance.get(
       `/eventos/pesquisar?Pagina=1&Cidade=${search}`
@@ -41,6 +48,7 @@ export function useEventsApi() {
       entrarEvento,
       sairEvento,
       listarEventosPesquisa,
+      listarEventosPerfil,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

@@ -7,7 +7,7 @@ import { useGlobalToast } from "../../../context"
 import { TOAST_MESSAGES } from "../../../constants/toast-messages"
 import { useNavigate } from "react-router-dom"
 import { PERFIL_ROUTE } from "../../../constants/routes"
-export function Event({ event, attEvents }) {
+export function Event({ event, attEvents, userLogged }) {
   const {
     id,
     organizador,
@@ -17,12 +17,15 @@ export function Event({ event, attEvents }) {
     endereco,
     quantidadeParticipantes,
     quantidadeVoluntariosNecessarios,
-    isJoined,
+    estaNoEvento,
+    vagasDisponiveis,
+    cancelado,
+    expirado,
   } = event
   const navigate = useNavigate()
   const eventsApi = useEventsApi()
   const [, setGlobalToast] = useGlobalToast()
-
+  const isOwner = parseInt(organizador.id) === parseInt(userLogged?.id)
   async function handleJoin() {
     try {
       await eventsApi.entrarEvento(id)
@@ -44,12 +47,19 @@ export function Event({ event, attEvents }) {
   async function handleCancel() {
     try {
       await eventsApi.sairEvento({ EventoId: id })
+      attEvents((currentValue) => !currentValue)
+      if (isOwner) {
+        return setGlobalToast((currentValue) => ({
+          ...currentValue,
+          showToast: true,
+          content: TOAST_MESSAGES.EVENT_CANCEL_SUCCESS,
+        }))
+      }
       setGlobalToast((currentValue) => ({
         ...currentValue,
         showToast: true,
-        content: TOAST_MESSAGES.EVENT_CANCEL_SUCCESS,
+        content: TOAST_MESSAGES.EVENT_EXIT_SUCCESS,
       }))
-      attEvents((currentValue) => !currentValue)
     } catch (error) {
       setGlobalToast((currentValue) => ({
         ...currentValue,
@@ -60,15 +70,21 @@ export function Event({ event, attEvents }) {
   }
 
   function renderButton() {
-    const isExpired = Date.now() > new Date(dataEvento).getTime()
-    if (isExpired) {
+    if (expirado) {
       return (
         <button disabled className="button-expired button-medium button-event">
           Expirado
         </button>
       )
     }
-    if (isJoined) {
+    if (cancelado) {
+      return (
+        <button disabled className="button-expired button-medium button-event">
+          Cancelado
+        </button>
+      )
+    }
+    if (isOwner) {
       return (
         <button
           onClick={handleCancel}
@@ -78,32 +94,45 @@ export function Event({ event, attEvents }) {
         </button>
       )
     }
-    if (quantidadeParticipantes === quantidadeVoluntariosNecessarios) {
+    if (estaNoEvento) {
+      return (
+        <button
+          onClick={handleCancel}
+          className="button-secondary button-medium button-event"
+        >
+          Sair
+        </button>
+      )
+    }
+    if (!vagasDisponiveis) {
       return (
         <button disabled className="button-expired button-medium button-event">
           Cheio
         </button>
       )
-    } else {
-      return (
-        <button
-          onClick={handleJoin}
-          className="button-primary button-medium button-event"
-        >
-          Juntar-se
-        </button>
-      )
     }
+    return (
+      <button
+        onClick={handleJoin}
+        className="button-primary button-medium button-event"
+      >
+        Juntar-se
+      </button>
+    )
   }
 
   return (
     <div className="div-event">
       <div className="div-event-row">
         <div
-          className="div-event-row"
+          className="div-event-row div-user-infos"
           onClick={() => navigate(PERFIL_ROUTE(organizador.id))}
         >
-          <img src={organizador.imagemPerfil || defaultUserImage} alt="user" />
+          <img
+            className="event-user-image"
+            src={organizador.fotoPerfil || defaultUserImage}
+            alt="user"
+          />
           <h4 className="title-large-bold event-user-name">
             {organizador.nome}
           </h4>

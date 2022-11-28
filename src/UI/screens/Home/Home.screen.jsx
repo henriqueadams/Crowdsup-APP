@@ -45,7 +45,12 @@ export function Home() {
           <div className="div-events">
             {listaEventos.map((event) => {
               return (
-                <Event event={event} key={event.id} attEvents={setAttEvents} />
+                <Event
+                  event={event}
+                  key={event.id}
+                  attEvents={setAttEvents}
+                  userLogged={loggedUser}
+                />
               )
             })}
           </div>

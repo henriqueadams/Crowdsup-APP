@@ -3,8 +3,9 @@ import { Header, Event } from "../../components/"
 import { useEffect } from "react"
 import { useEventsApi, useUserApi } from "../../../hooks"
 import { useState } from "react"
-import { useGlobalModal } from "../../../context"
+import { useGlobalModal, useGlobalToast } from "../../../context"
 import { useParams } from "react-router-dom"
+import { TOAST_MESSAGES } from "../../../constants/toast-messages"
 export function SearchResponse() {
   const eventsApi = useEventsApi()
   const { search } = useParams()
@@ -12,6 +13,7 @@ export function SearchResponse() {
   const [loggedUser, setLoggedUser] = useState()
   const userApi = useUserApi()
   const [globalModal] = useGlobalModal()
+  const [, setGlobalToast] = useGlobalToast()
   const [attEvents, setAttEvents] = useState(false)
 
   useEffect(() => {
@@ -28,13 +30,16 @@ export function SearchResponse() {
         const response = await eventsApi.listarEventosPesquisa(search)
         setListaEventos(response.eventos)
       } catch (error) {
-        console.log(error)
+        setGlobalToast((currentValue) => ({
+          ...currentValue,
+          showToast: true,
+          content: TOAST_MESSAGES.DEFAULT_ERROR,
+        }))
       }
     }
     fetchEvents()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventsApi, globalModal, attEvents])
-
-  console.log(listaEventos)
 
   return (
     <div className="background default-background-color">
@@ -49,7 +54,12 @@ export function SearchResponse() {
           <div className="div-events">
             {listaEventos.map((event) => {
               return (
-                <Event event={event} key={event.id} attEvents={setAttEvents} />
+                <Event
+                  event={event}
+                  key={event.id}
+                  attEvents={setAttEvents}
+                  userLogged={loggedUser}
+                />
               )
             })}
           </div>

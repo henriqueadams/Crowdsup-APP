@@ -28,8 +28,13 @@ export function useUserApi() {
     return response
   }
 
-  async function listarPerfil() {
-    const response = await httpInstance.get("/usuarios")
+  async function editar(editValues) {
+    const response = await httpInstance.put("/usuarios", editValues)
+    return response
+  }
+
+  async function listarPerfil(usuarioId) {
+    const response = await httpInstance.get(`/usuarios/perfil?id=${usuarioId}`)
     return response
   }
 
@@ -40,6 +45,7 @@ export function useUserApi() {
       detalhar,
       listarPerfil,
       logout,
+      editar,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

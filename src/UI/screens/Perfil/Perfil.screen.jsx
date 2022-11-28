@@ -1,111 +1,99 @@
 import "./Perfil.screen.styles.css"
-
-import { Header, Event, FormField } from "../../components/"
+import { Header, Event } from "../../components/"
 import userImage from "../../../assets/img/user-default.png"
 import editImage from "../../../assets/img/edit.png"
-import { EVENTS } from "../../../constants/events"
 import { useGlobalModal } from "../../../context"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useParams } from "react-router-dom"
+import { useUserApi, useEventsApi } from "../../../hooks"
+import { EditPerfilForm } from "./FormEdit.section"
 export function Perfil() {
-  const [, setGlobalModal] = useGlobalModal()
-  const user = {
-    img: userImage,
-    nome: "Jorge Wagner",
-    cidade: "Rolante - RS",
-    email: "exemplo@faccat.com",
-    telefone: "(51) 99999-9999",
-  }
+  const [globalModal, setGlobalModal] = useGlobalModal()
+  const userApi = useUserApi()
+  const eventsApi = useEventsApi()
+  const { id } = useParams()
+  const [userPerfil, setUserPerfil] = useState()
+  const [eventsList, setEventsList] = useState([])
+  const [attEvents, setAttEvents] = useState(false)
+  const [userLogged, setUserLogged] = useState()
 
-  function EditPerfilForm() {
-    // eslint-disable-next-line no-unused-vars
-    const [formData, setFormData] = useState({
-      Estado: "",
-      Cidade: "",
-      Telefone: "",
-    })
-    function handleChange(event) {
-      const { name, value } = event.target
-      setFormData((currentValue) => ({ ...currentValue, [name]: value }))
+  useEffect(() => {
+    async function fetchUsuarioLogado() {
+      const response = await userApi.detalhar()
+      setUserLogged(response)
     }
-    function handleSubmit() {}
+    fetchUsuarioLogado()
+  }, [id, userApi])
 
-    return (
-      <div className="form-edit-modal-wrapper">
-        <h2 className="form-edit-title">Editar perfil</h2>
-        <form className="form-edit">
-          <FormField
-            label="Cidade"
-            name="Cidade"
-            type="text"
-            onChange={handleChange}
-          />
-          <FormField
-            label="Estado"
-            name="Estado"
-            type="text"
-            onChange={handleChange}
-          />
-          <FormField
-            label="Telefone"
-            name="Telefone"
-            type="text"
-            onChange={handleChange}
-          />
-        </form>
-        <button
-          onClick={(event) => handleSubmit(event)}
-          className="button-medium button-primary button-modal"
-          type="submit"
-        >
-          Registrar
-        </button>
-      </div>
-    )
-  }
+  useEffect(() => {
+    async function fetchUsuario() {
+      const response = await userApi.listarPerfil(id)
+      setUserPerfil(response)
+    }
+    fetchUsuario()
+  }, [id, userApi, globalModal])
+
+  useEffect(() => {
+    async function fetchEvent() {
+      const response = await eventsApi.listarEventosPerfil(id)
+      setEventsList(response.eventos)
+    }
+    fetchEvent()
+  }, [eventsApi, id, attEvents, globalModal])
 
   return (
     <div className="background default-background-color">
-      <Header />
+      <Header userLogged={userLogged} />
       <div className="padding-header ">
         <div className="default-container">
           <div className="header-perfil">
             <div className="header-perfil-user">
               <img
                 className="header-perfil-user-image"
-                src={user.img}
+                src={userPerfil?.fotoPerfil || userImage}
                 alt="imagem do usuario"
               />
               <div className="header-perfil-user-infos">
                 <div className="div-inline-text-image">
-                  <h1 className="title-name">{user.nome}</h1>
-                  <img
-                    src={editImage}
-                    alt="lapis"
-                    onClick={() =>
-                      setGlobalModal((currentValue) => ({
-                        ...currentValue,
-                        showModal: true,
-                        content: EditPerfilForm,
-                      }))
-                    }
-                  />
+                  <h1 className="title-name">{userPerfil?.nome}</h1>
+                  {parseInt(userLogged?.id) === parseInt(id) && (
+                    <img
+                      src={editImage}
+                      alt="lapis"
+                      onClick={() =>
+                        setGlobalModal((currentValue) => ({
+                          ...currentValue,
+                          showModal: true,
+                          content: EditPerfilForm,
+                        }))
+                      }
+                    />
+                  )}
                 </div>
-
-                <h4 className="low-text-perfil">{user.cidade}</h4>
+                <h4 className="low-text-perfil">{userPerfil?.cidade}</h4>
               </div>
             </div>
             <div className="header-perfil-contact">
               <h2 className="medium-text-perfil">Contato</h2>
-              <h4 className="low-text-perfil">{user.email}</h4>
-              <h4 className="low-text-perfil">{user.telefone}</h4>
+              <h4 className="low-text-perfil">{userPerfil?.email}</h4>
+              <h4 className="low-text-perfil">{userPerfil?.telefone}</h4>
             </div>
           </div>
           <h2 className="event-title-perfil medium-text-perfil">
-            Ações que estou participando
+            {eventsList.length
+              ? "Ações que estou participando"
+              : "Ainda não estou participando de nenhum evento"}
           </h2>
           <div className="div-events">
-            {EVENTS.map((event, index) => {
-              return <Event event={event} key={index} />
+            {eventsList.map((event, index) => {
+              return (
+                <Event
+                  event={event}
+                  key={index}
+                  attEvents={setAttEvents}
+                  userLogged={userLogged}
+                />
+              )
             })}
           </div>
         </div>

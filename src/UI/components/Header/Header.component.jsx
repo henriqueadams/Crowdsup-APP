@@ -28,7 +28,7 @@ export function Header({ userLogged }) {
           {dropdown && (
             <ul className="dropdown">
               <li>
-                <NavLink to={PERFIL_ROUTE}>Meu perfil</NavLink>
+                <NavLink to={PERFIL_ROUTE(userLogged?.id)}>Meu perfil</NavLink>
               </li>
               <li
                 onClick={() =>
