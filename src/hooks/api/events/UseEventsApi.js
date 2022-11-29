@@ -5,21 +5,21 @@ import { useHttp } from "../base/UseHttp.hook"
 export function useEventsApi() {
   const httpInstance = useHttp(API_ROUTE)
 
-  async function listarEventos() {
-    const response = await httpInstance.get("/eventos?Pagina=1")
+  async function listarEventos(page) {
+    const response = await httpInstance.get(`/eventos?Pagina=${page}`)
     return response
   }
 
-  async function listarEventosPerfil(usuarioId) {
+  async function listarEventosPerfil(page, usuarioId) {
     const response = await httpInstance.get(
-      `/eventos/perfil?Pagina=1&UsuarioId=${usuarioId}`
+      `/eventos/perfil?Pagina=${page}&UsuarioId=${usuarioId}`
     )
     return response
   }
 
-  async function listarEventosPesquisa(search) {
+  async function listarEventosPesquisa(page, search) {
     const response = await httpInstance.get(
-      `/eventos/pesquisar?Pagina=1&Cidade=${search}`
+      `/eventos/pesquisar?Pagina=${page}&Cidade=${search}`
     )
     return response
   }

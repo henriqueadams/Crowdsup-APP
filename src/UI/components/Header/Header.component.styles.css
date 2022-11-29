@@ -39,7 +39,8 @@
   color: #ffffff;
 }
 
-.user-image {
+.user-image img {
+  border-radius: 50%;
   height: 56px;
   width: 56px;
   margin-left: 46px;

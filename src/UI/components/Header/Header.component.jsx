@@ -23,7 +23,10 @@ export function Header({ userLogged }) {
         <SearchBar />
         <div className="div-menu">
           <div onClick={() => setDropDown(!dropdown)} className="user-image">
-            <img src={userLogged?.imagemPerfil || defaultUserImage} alt="" />
+            <img
+              src={userLogged?.fotoPerfil || defaultUserImage}
+              alt="foto de perfil"
+            />
           </div>
           {dropdown && (
             <ul className="dropdown">

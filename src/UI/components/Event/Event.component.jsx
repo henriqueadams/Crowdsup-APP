@@ -7,7 +7,7 @@ import { useGlobalToast } from "../../../context"
 import { TOAST_MESSAGES } from "../../../constants/toast-messages"
 import { useNavigate } from "react-router-dom"
 import { PERFIL_ROUTE } from "../../../constants/routes"
-export function Event({ event, attEvents, userLogged }) {
+export function Event({ event, attEvents, userLogged, innerRef }) {
   const {
     id,
     organizador,
@@ -122,7 +122,7 @@ export function Event({ event, attEvents, userLogged }) {
   }
 
   return (
-    <div className="div-event">
+    <div className="div-event" ref={innerRef}>
       <div className="div-event-row">
         <div
           className="div-event-row div-user-infos"
@@ -164,7 +164,7 @@ export function Event({ event, attEvents, userLogged }) {
         </div>
         <div className="div-event-row">
           <div className="div-event-row">
-            <p className="title-large-thin">{`${quantidadeParticipantes} / ${quantidadeVoluntariosNecessarios}`}</p>
+            <p className="title-large-thin event-quatity-volunters">{`${quantidadeParticipantes} / ${quantidadeVoluntariosNecessarios}`}</p>
             <img className="image-margin" src={userIcon} alt="user-icon" />
           </div>
           {renderButton()}
