@@ -7,7 +7,9 @@ export function SearchBar() {
   const navigate = useNavigate()
   const [search, setSearch] = useState("")
 
-  function handleSubmit() {
+  function handleSubmit(event) {
+    event.preventDefault()
+    console.log(SEARCH_ROUTE(search))
     navigate(SEARCH_ROUTE(search))
   }
 

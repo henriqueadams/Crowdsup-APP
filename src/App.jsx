@@ -39,7 +39,6 @@ function App() {
           }
         />
         <Route
-          exact
           path="/pesquisa/:search"
           element={
             <PrivateRoute>
