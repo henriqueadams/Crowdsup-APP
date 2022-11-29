@@ -9,7 +9,6 @@ export function SearchBar() {
 
   function handleSubmit(event) {
     event.preventDefault()
-    console.log(SEARCH_ROUTE(search))
     navigate(SEARCH_ROUTE(search))
   }
 
