@@ -1,20 +1,26 @@
 {
   "routes": [
     {
-      "route": "/*",
-      "serve": "/index.html",
-      "statusCode": 200
+      "route": "/admin",
+      "allowedRoles": ["administrator"]
     }
   ],
-  "platformErrorOverrides": [
-    { "errorType": "NotFound", "serve": "/404" },
-    {
-      "errorType": "Unauthenticated",
-      "statusCode": "302",
-      "serve": "/"
+  "responseOverrides": {
+    "400": {
+      "rewrite": "/invalid-invitation-error.html"
+    },
+    "401": {
+      "redirect": "/",
+      "statusCode": 302
+    },
+    "403": {
+      "rewrite": "/custom-forbidden-page.html"
+    },
+    "404": {
+      "rewrite": "/404.html"
     }
-  ],
+  },
   "mimeTypes": {
-    "json": "application/json"
+    ".json": "text/json"
   }
 }
