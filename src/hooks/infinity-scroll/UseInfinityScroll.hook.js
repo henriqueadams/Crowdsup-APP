@@ -11,10 +11,12 @@ export function useInfinityScroll(
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [resetOnChange, setResetOnChange] = useState(false)
 
   useEffect(() => {
     setHasMore(true)
     setPageNumber(1)
+    setResetOnChange((current) => !current)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...atualizacoesUseEffect])
 
@@ -41,7 +43,7 @@ export function useInfinityScroll(
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNumber, hasMore])
+  }, [pageNumber, hasMore, resetOnChange])
 
   return { loading, error, hasMore }
 }
