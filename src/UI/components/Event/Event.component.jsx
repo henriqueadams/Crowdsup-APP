@@ -137,7 +137,7 @@ export function Event({ event, attEvents, userLogged, innerRef }) {
             {organizador.nome}
           </h4>
         </div>
-        <div className="div-event-row">
+        <div className="div-event-row mobile-row">
           <p className="title-large-thin">
             <strong className="title-large-bold">Data do evento: </strong>{" "}
             {`${new Date(dataEvento).getDate()}/${
@@ -163,7 +163,7 @@ export function Event({ event, attEvents, userLogged, innerRef }) {
           </p>
         </div>
         <div className="div-event-row">
-          <div className="div-event-row">
+          <div className="div-event-row mobile-row">
             <p className="title-large-thin event-quatity-volunters">{`${quantidadeParticipantes} / ${quantidadeVoluntariosNecessarios}`}</p>
             <img className="image-margin" src={userIcon} alt="user-icon" />
           </div>

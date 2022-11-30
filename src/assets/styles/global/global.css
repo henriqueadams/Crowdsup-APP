@@ -79,13 +79,16 @@ button:disabled {
   margin: 0 auto;
   max-width: 1440px;
 }
-/* h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-span {
-    
-} */
+@media screen and (max-width: 1024px) {
+  .default-container {
+    width: 80%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .default-container {
+    width: 90%;
+  }
+  .padding-header {
+    padding-top: var(--padding-header-mobile);
+  }
+}

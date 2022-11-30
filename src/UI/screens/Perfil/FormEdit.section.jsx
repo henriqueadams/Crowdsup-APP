@@ -22,13 +22,9 @@ export function EditPerfilForm() {
     Telefone: "",
     FotoPerfil: "",
   })
-
-  console.log(formData)
-
   useEffect(() => {
     async function fetchUsuarioLogado() {
       const response = await userApi.detalhar()
-      console.log(response)
       setFormData({
         Estado: response.estado,
         Cidade: response.cidade,

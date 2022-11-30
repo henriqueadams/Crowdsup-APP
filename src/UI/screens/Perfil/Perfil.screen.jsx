@@ -82,6 +82,7 @@ export function Perfil() {
                       <img
                         src={editImage}
                         alt="lapis"
+                        className="edit-image"
                         onClick={() =>
                           setGlobalModal((currentValue) => ({
                             ...currentValue,
@@ -92,7 +93,9 @@ export function Perfil() {
                       />
                     )}
                   </div>
-                  <h4 className="low-text-perfil">{userPerfil?.cidade}</h4>
+                  <h4 className="low-text-perfil user-city">
+                    {userPerfil?.cidade}
+                  </h4>
                 </div>
               </div>
               <div className="header-perfil-contact">

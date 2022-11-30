@@ -7,12 +7,29 @@ import { useGlobalModal } from "../../../context"
 import { AddEventForm } from "./FormEvent.section"
 import defaultUserImage from "../../../assets/img/user-default.png"
 import { useUserApi } from "../../../hooks"
+import { useEffectOnce } from "usehooks-ts"
 
 export function Header({ userLogged }) {
   const [, setGlobalModal] = useGlobalModal()
   const [dropdown, setDropDown] = useState()
   const navigate = useNavigate()
   const userApi = useUserApi()
+  const [isOnBreakpoint, setIsOnBreakpoint] = useState(false)
+
+  useEffectOnce(() => {
+    changeBreackpoint()
+  })
+
+  function changeBreackpoint() {
+    if (window.screen.width < 768) {
+      setIsOnBreakpoint(true)
+    } else {
+      setIsOnBreakpoint(false)
+    }
+  }
+
+  window.addEventListener("resize", changeBreackpoint)
+
   return (
     <div className="div-header">
       <Modal />
@@ -20,7 +37,7 @@ export function Header({ userLogged }) {
         <h1 className="logo-header" onClick={() => navigate(HOME_ROUTE)}>
           Crowdsup
         </h1>
-        <SearchBar />
+        {!isOnBreakpoint && <SearchBar />}
         <div className="div-menu">
           <div onClick={() => setDropDown(!dropdown)} className="user-image">
             <img
@@ -49,6 +66,7 @@ export function Header({ userLogged }) {
           )}
         </div>
       </div>
+      {isOnBreakpoint && <SearchBar />}
     </div>
   )
 }

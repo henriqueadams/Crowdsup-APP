@@ -16,8 +16,6 @@ export function SearchResponse() {
   const [pageNumber, setPageNumber] = useState(1)
   const [isLoadingInfos, setLoadingInfos] = useState(true)
 
-  console.log(search)
-
   useEffect(() => {
     async function fetchDetailUser() {
       const response = await userApi.detalhar()
