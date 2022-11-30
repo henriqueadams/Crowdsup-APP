@@ -11,7 +11,7 @@
     {
       "errorType": "Unauthenticated",
       "statusCode": "302",
-      "serve": "/login"
+      "serve": "/"
     }
   ],
   "mimeTypes": {
