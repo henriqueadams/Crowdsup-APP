@@ -186,24 +186,28 @@ export function Register() {
             isMandatory
             isError={errorList.includes("Sexo")}
           >
-            <input
-              type="radio"
-              name="Sexo"
-              id="man"
-              value={1}
-              onChange={handleChange}
-              checked={formData.Sexo === 1}
-            />
-            <label htmlFor="man">Masculino</label>
-            <input
-              checked={formData.Sexo === 2}
-              type="radio"
-              name="Sexo"
-              id="woman"
-              value={2}
-              onChange={handleChange}
-            />
-            <label htmlFor="woman">Feminino</label>
+            <div>
+              <input
+                type="radio"
+                name="Sexo"
+                id="man"
+                value={1}
+                onChange={handleChange}
+                checked={formData.Sexo === 1}
+              />
+              <label htmlFor="man">Masculino</label>
+            </div>
+            <div>
+              <input
+                checked={formData.Sexo === 2}
+                type="radio"
+                name="Sexo"
+                id="woman"
+                value={2}
+                onChange={handleChange}
+              />
+              <label htmlFor="woman">Feminino</label>
+            </div>
           </FormField>
         </form>
         <div className="form-footer">

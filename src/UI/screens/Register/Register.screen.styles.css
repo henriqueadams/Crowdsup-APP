@@ -31,3 +31,9 @@
     height: 100vh;
   }
 }
+
+@media screen and (max-width: 450px) {
+  .div-form-register {
+    padding: 33px 25px 60px;
+  }
+}
