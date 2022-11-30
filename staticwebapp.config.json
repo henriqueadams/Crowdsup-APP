@@ -7,7 +7,7 @@
   ],
   "navigationFallback": {
     "rewrite": "index.html",
-    "exclude": ["/static/media/*.{png,jpg,gif,svg}", "/static/css/*"]
+    "exclude": ["/src/assets/*.{png,jpg,gif,svg}", "/src/css/*"]
   },
   "responseOverrides": {
     "400": {
