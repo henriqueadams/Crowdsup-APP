@@ -1,5 +1,12 @@
 import { Routes, Route } from "react-router-dom"
-import { Login, Register, Home, Perfil, SearchResponse } from "./UI/screens"
+import {
+  Login,
+  Register,
+  Home,
+  Perfil,
+  SearchResponse,
+  NotFound,
+} from "./UI/screens"
 import { Toast } from "./UI/components"
 import { Navigate } from "react-router-dom"
 import "./assets/styles/base/reset.css"
@@ -46,6 +53,7 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   )
